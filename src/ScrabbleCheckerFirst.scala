@@ -1,11 +1,11 @@
-object ScrabbleChecker {
+object ScrabbleCheckerFirst {
+
   def main(args: Array[String]): Unit = {
+    assert(checkWord("quizzical") == 38)
     assert(checkWord("foobar") == -1)
-    assert(checkWord("foobar") != 1)
   }
 
   def checkWord(word: String): Int = {
-    val dictionary: List[String] = scala.io.Source.fromFile("/usr/share/dict/words").getLines.toList
     val tileList: List[Tile] = List(
       Tile('a', 1),
       Tile('b', 3),
@@ -34,11 +34,15 @@ object ScrabbleChecker {
       Tile('y', 4),
       Tile('z', 10)
     )
-
+    val dictionary: List[String] = scala.io.Source.fromFile("/usr/share/dict/words").getLines.toList
     if(dictionary.contains(word)) {
-      ???
+      val wordTiles: List[Tile] = word.toList.flatMap { letter: Char =>
+        tileList.filter(_.letter == letter)
+      }
+      println(s"$word is worth ${wordTiles.map(_.value).sum}")
+      wordTiles.map(_.value).sum
     } else {
-      println(s"$word not in the dictionary.")
+      println(s"$word is not in the dictionary.")
       -1
     }
   }
